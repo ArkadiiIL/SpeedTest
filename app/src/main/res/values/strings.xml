@@ -7,4 +7,13 @@
     <string name="download_label">Download:</string>
     <string name="instant_upload_label">Instant upload:</string>
     <string name="upload_label">Upload:</string>
+    <string name="tv_theme_label_text">Theme</string>
+    <string name="rb_dark_text">Dark</string>
+    <string name="rb_light_text">Light</string>
+    <string name="rb_system_text">System</string>
+    <string name="tv_url_label_text">Server URL</string>
+    <string name="et_server_url_text">Enter URL</string>
+    <string name="cb_download_text">Download</string>
+    <string name="cb_upload_text">Upload</string>
+    <string name="btn_save_text">SAVE</string>
 </resources>
