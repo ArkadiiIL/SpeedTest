@@ -19,11 +19,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun updateSettings(
         theme: Theme,
-        serverUrl: String = _settings.value?.serverUrl.orEmpty(),
+        downloadUrl: String = _settings.value?.downloadUrl.orEmpty(),
+        uploadUrl: String = _settings.value?.uploadUrl.orEmpty(),
         download: Boolean = _settings.value?.download ?: true,
         upload: Boolean = _settings.value?.upload ?: true
     ) {
-        _settings.value = Settings(theme, serverUrl, download, upload)
+        _settings.value = Settings(theme, downloadUrl, uploadUrl, download, upload)
     }
 
     fun saveSettings() {
@@ -31,7 +32,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             SettingsUtil.saveSettings(
                 getApplication(),
                 settings.theme,
-                settings.serverUrl.ifEmpty { SettingsUtil.DEFAULT_SERVER_URL },
+                settings.downloadUrl.ifEmpty { SettingsUtil.DEFAULT_DOWNLOAD_URL },
+                settings.uploadUrl.ifEmpty { SettingsUtil.DEFAULT_UPLOAD_URL },
                 settings.download,
                 settings.upload
             )

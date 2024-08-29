@@ -8,12 +8,14 @@ object SettingsUtil {
     private const val PREFS_NAME = "AppSettings"
 
     private const val KEY_SELECTED_THEME = "selectedTheme"
-    private const val KEY_SERVER_URL = "serverUrl"
+    private const val KEY_DOWNLOAD_URL = "downloadUrl"
+    private const val KEY_UPLOAD_URL = "uploadUrl"
     private const val KEY_DOWNLOAD = "download"
     private const val KEY_UPLOAD = "upload"
 
     private val DEFAULT_SELECTED_THEME = Theme.SYSTEM.themeId
-    const val DEFAULT_SERVER_URL = "http://2.testdebit.info/fichiers/1Mo.dat"
+    const val DEFAULT_DOWNLOAD_URL = "https://my-server-heu4.onrender.com/download?size=10"
+    const val DEFAULT_UPLOAD_URL = "https://my-server-heu4.onrender.com/upload"
     private const val DEFAULT_DOWNLOAD = true
     private const val DEFAULT_UPLOAD = true
 
@@ -24,14 +26,16 @@ object SettingsUtil {
     fun saveSettings(
         context: Context,
         theme: Theme,
-        serverUrl: String,
+        downloadUrl: String,
+        uploadUrl: String,
         download: Boolean,
         upload: Boolean
     ) {
         val sharedPreferences = getSharedPreferences(context)
         val editor = sharedPreferences.edit()
         editor.putInt(KEY_SELECTED_THEME, theme.themeId)
-        editor.putString(KEY_SERVER_URL, serverUrl)
+        editor.putString(KEY_DOWNLOAD_URL, downloadUrl)
+        editor.putString(KEY_UPLOAD_URL, uploadUrl)
         editor.putBoolean(KEY_DOWNLOAD, download)
         editor.putBoolean(KEY_UPLOAD, upload)
         editor.apply()
@@ -41,13 +45,16 @@ object SettingsUtil {
         val sharedPreferences = getSharedPreferences(context)
         val themeId =
             sharedPreferences.getInt(KEY_SELECTED_THEME, DEFAULT_SELECTED_THEME)
-        val serverUrl =
-            sharedPreferences.getString(KEY_SERVER_URL, DEFAULT_SERVER_URL) ?: DEFAULT_SERVER_URL
+        val downloadUrl =
+            sharedPreferences.getString(KEY_DOWNLOAD_URL, DEFAULT_DOWNLOAD_URL)
+                ?: DEFAULT_DOWNLOAD_URL
+        val uploadUrl =
+            sharedPreferences.getString(KEY_UPLOAD_URL, DEFAULT_UPLOAD_URL) ?: DEFAULT_UPLOAD_URL
         val download =
             sharedPreferences.getBoolean(KEY_DOWNLOAD, DEFAULT_DOWNLOAD)
         val upload = sharedPreferences.getBoolean(KEY_UPLOAD, DEFAULT_UPLOAD)
 
-        return Settings(Theme.getThemeById(themeId), serverUrl, download, upload)
+        return Settings(Theme.getThemeById(themeId), downloadUrl, uploadUrl, download, upload)
     }
 }
 
@@ -65,7 +72,8 @@ enum class Theme(val themeId: Int) {
 
 data class Settings(
     val theme: Theme,
-    val serverUrl: String,
+    val downloadUrl: String,
+    val uploadUrl: String,
     val download: Boolean,
     val upload: Boolean
 )

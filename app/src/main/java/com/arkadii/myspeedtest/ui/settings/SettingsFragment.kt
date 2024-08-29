@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.arkadii.myspeedtest.databinding.FragmentSettingsBinding
-import com.arkadii.myspeedtest.util.SettingsUtil
 import com.arkadii.myspeedtest.util.Theme
 
 class SettingsFragment : Fragment() {
@@ -50,7 +48,8 @@ class SettingsFragment : Fragment() {
                     Theme.LIGHT -> rbLight.isChecked = true
                     Theme.SYSTEM -> rbSystem.isChecked = true
                 }
-                etServerUrl.setText(settings.serverUrl)
+                etServerDownloadUrl.setText(settings.downloadUrl)
+                etServerUploadUrl.setText(settings.uploadUrl)
                 cbDownload.isChecked = settings.download
                 cbUpload.isChecked = settings.upload
             }
@@ -59,11 +58,12 @@ class SettingsFragment : Fragment() {
 
     private fun updateSettings(
         theme: Theme = viewModel.settings.value?.theme ?: Theme.SYSTEM,
-        serverUrl: String = binding.etServerUrl.text.toString(),
+        downloadUrl: String = binding.etServerDownloadUrl.text.toString(),
+        uploadUrl: String = binding.etServerUploadUrl.text.toString(),
         download: Boolean = binding.cbDownload.isChecked,
         upload: Boolean = binding.cbUpload.isChecked
     ) {
-        viewModel.updateSettings(theme, serverUrl, download, upload)
+        viewModel.updateSettings(theme, downloadUrl, uploadUrl, download, upload)
     }
 
     private fun updateAndSaveSettings() {
