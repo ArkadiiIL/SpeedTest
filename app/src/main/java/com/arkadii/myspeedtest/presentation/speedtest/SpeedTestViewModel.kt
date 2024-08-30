@@ -1,13 +1,10 @@
 package com.arkadii.myspeedtest.presentation.speedtest
 
 import android.app.Application
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arkadii.myspeedtest.R
 import com.arkadii.myspeedtest.domain.service.SpeedTestService
 import com.arkadii.myspeedtest.util.SettingsUtil
 import dagger.hilt.android.lifecycle.HiltViewModel

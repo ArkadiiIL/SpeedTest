@@ -12,7 +12,7 @@ object ErrorUtil {
             SpeedTestError.SOCKET_TIMEOUT -> context.getString(R.string.socketTimeoutError)
             SpeedTestError.CONNECTION_ERROR -> context.getString(R.string.connectionError)
             SpeedTestError.MALFORMED_URI -> context.getString(R.string.malformedUriError)
-            SpeedTestError.UNSUPPORTED_PROTOCOL -> context.getString(R.string.usupportedProtocolError)
+            SpeedTestError.UNSUPPORTED_PROTOCOL -> context.getString(R.string.unsupportedProtocolError)
             null -> context.getString(R.string.unknownError)
         }
     }
