@@ -1,19 +1,23 @@
-package com.arkadii.myspeedtest.ui.speedtest
+package com.arkadii.myspeedtest.presentation.speedtest
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arkadii.myspeedtest.domain.service.SpeedTestService
-import com.arkadii.myspeedtest.network.SpeedTestServiceImpl
 import com.arkadii.myspeedtest.util.SettingsUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SpeedTestViewModel(private val application: Application) : AndroidViewModel(application) {
-    private val speedTestService: SpeedTestService = SpeedTestServiceImpl()
+@HiltViewModel
+class SpeedTestViewModel @Inject constructor(
+    private val application: Application,
+    private val speedTestService: SpeedTestService
+) : ViewModel() {
     private val _instantDownload = MutableLiveData<String>()
     val instantDownload: LiveData<String> = _instantDownload
     private val _averageDownload = MutableLiveData<String>()
@@ -44,11 +48,17 @@ class SpeedTestViewModel(private val application: Application) : AndroidViewMode
                     isDownloadComplete = false
                     speedTestService.startDownloadSpeedTest(
                         url = settings.downloadUrl,
-                        instantSpeed = {
-                            _instantDownload.postValue(it.instantSpeedMbps)
+                        instantSpeed = { result ->
+                            val speed = result.instantSpeedMbps
+                            if (speed != null) {
+                                _instantDownload.postValue(speed.toString())
+                            }
                         },
-                        averageSpeed = {
-                            _averageDownload.postValue(it.instantSpeedMbps)
+                        averageSpeed = { result ->
+                            val speed = result.instantSpeedMbps
+                            if (speed != null) {
+                                _averageDownload.postValue(speed.toString())
+                            }
                             isDownloadComplete = true
                             checkAllTestsComplete()
                         }
@@ -59,11 +69,17 @@ class SpeedTestViewModel(private val application: Application) : AndroidViewMode
                     isUploadComplete = false
                     speedTestService.startUploadSpeedTest(
                         url = settings.uploadUrl,
-                        instantSpeed = {
-                            _instantUpload.postValue(it.instantSpeedMbps)
+                        instantSpeed = { result ->
+                            val speed = result.instantSpeedMbps
+                            if (speed != null) {
+                                _instantUpload.postValue(speed.toString())
+                            }
                         },
-                        averageSpeed = {
-                            _averageUpload.postValue(it.instantSpeedMbps)
+                        averageSpeed = { result ->
+                            val speed = result.instantSpeedMbps
+                            if (speed != null) {
+                                _averageUpload.postValue(speed.toString())
+                            }
                             isUploadComplete = true
                             checkAllTestsComplete()
                         }

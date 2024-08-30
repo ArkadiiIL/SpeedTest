@@ -1,4 +1,4 @@
-package com.arkadii.myspeedtest
+package com.arkadii.myspeedtest.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,10 +7,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.arkadii.myspeedtest.R
 import com.arkadii.myspeedtest.databinding.ActivityMainBinding
 import com.arkadii.myspeedtest.util.SettingsUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

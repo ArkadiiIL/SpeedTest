@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.0"
+kotlin = "2.0.20"
 coreKtx = "1.13.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -15,6 +15,7 @@ navigationUiKtx = "2.7.7"
 croutines = "1.8.1"
 okhttp = "4.12.0"
 jspeedtest = "1.32.1"
+dagger = "2.51.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,8 +32,12 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 kotlinx-coroutines-android = {group = "org.jetbrains.kotlinx", name="kotlinx-coroutines-android", version.ref = "croutines"}
 com-squareup-okhttp3 = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
 fr-bmartel-jspeedtest = {group = "fr.bmartel", name = "jspeedtest", version.ref = "jspeedtest"}
+com-google-dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
+com-google-dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsKotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+daggerGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 

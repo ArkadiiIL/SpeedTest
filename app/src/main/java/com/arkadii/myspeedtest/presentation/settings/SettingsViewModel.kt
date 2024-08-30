@@ -1,14 +1,17 @@
-package com.arkadii.myspeedtest.ui.settings
+package com.arkadii.myspeedtest.presentation.settings
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.arkadii.myspeedtest.util.Settings
 import com.arkadii.myspeedtest.util.SettingsUtil
 import com.arkadii.myspeedtest.util.Theme
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class SettingsViewModel @Inject constructor(private val application: Application) : ViewModel() {
 
     private val _settings = MutableLiveData<Settings>()
     val settings: LiveData<Settings> get() = _settings
@@ -30,7 +33,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun saveSettings() {
         _settings.value?.let { settings ->
             SettingsUtil.saveSettings(
-                getApplication(),
+                application,
                 settings.theme,
                 settings.downloadUrl.ifEmpty { SettingsUtil.DEFAULT_DOWNLOAD_URL },
                 settings.uploadUrl.ifEmpty { SettingsUtil.DEFAULT_UPLOAD_URL },
@@ -41,6 +44,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun loadSettings() {
-        _settings.value = SettingsUtil.loadSettings(getApplication())
+        _settings.value = SettingsUtil.loadSettings(application)
     }
 }

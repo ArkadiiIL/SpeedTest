@@ -1,27 +1,28 @@
-package com.arkadii.myspeedtest.ui.speedtest
+package com.arkadii.myspeedtest.presentation.speedtest
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.arkadii.myspeedtest.databinding.FragmentSpeedTestBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SpeedTestFragment : Fragment() {
 
     private var _binding: FragmentSpeedTestBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var viewModel: SpeedTestViewModel
+    private val viewModel: SpeedTestViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[SpeedTestViewModel::class.java]
-
         _binding = FragmentSpeedTestBinding.inflate(inflater, container, false)
 
         return binding.root

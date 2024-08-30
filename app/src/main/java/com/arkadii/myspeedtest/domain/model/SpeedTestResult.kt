@@ -1,5 +1,7 @@
 package com.arkadii.myspeedtest.domain.model
 
 data class SpeedTestResult(
-    val instantSpeedMbps: String
+    val isError: Boolean,
+    val instantSpeedMbps: String?,
+    val errorText: String?
 )

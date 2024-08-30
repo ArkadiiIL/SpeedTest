@@ -1,14 +1,18 @@
 package com.arkadii.myspeedtest.network
 
+import android.content.Context
 import com.arkadii.myspeedtest.domain.model.SpeedTestResult
 import com.arkadii.myspeedtest.domain.service.SpeedTestService
+import com.arkadii.myspeedtest.util.ErrorUtil.getErrorText
 import com.arkadii.myspeedtest.util.SpeedUtils
 import fr.bmartel.speedtest.SpeedTestReport
 import fr.bmartel.speedtest.SpeedTestSocket
 import fr.bmartel.speedtest.inter.IRepeatListener
+import fr.bmartel.speedtest.inter.ISpeedTestListener
+import fr.bmartel.speedtest.model.SpeedTestError
 import java.math.BigDecimal
 
-class SpeedTestServiceImpl : SpeedTestService {
+class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
 
     override fun startDownloadSpeedTest(
         url: String,
@@ -43,17 +47,48 @@ class SpeedTestServiceImpl : SpeedTestService {
         averageSpeed: (SpeedTestResult) -> Unit
     ) {
         val speedTestSocket = SpeedTestSocket()
+        speedTestSocket.addSpeedTestListener(object : ISpeedTestListener {
+            override fun onCompletion(report: SpeedTestReport?) {
+            }
 
-        val allTests = mutableListOf<BigDecimal>()
+            override fun onProgress(percent: Float, report: SpeedTestReport?) {
+            }
+
+            override fun onError(speedTestError: SpeedTestError?, errorMessage: String?) {
+                instantSpeed(
+                    SpeedTestResult(
+                        true,
+                        null,
+                        getErrorText(context, speedTestError)
+                    )
+                )
+                averageSpeed(
+                    SpeedTestResult(
+                        true,
+                        null,
+                        getErrorText(context, speedTestError)
+                    )
+                )
+            }
+        })
 
         val repeatListener = object : IRepeatListener {
+            val allTests = mutableListOf<BigDecimal>()
             override fun onCompletion(report: SpeedTestReport?) {
                 if (report != null) {
                     val averageBits = SpeedUtils.calculateAverageSpeed(allTests)
                     val averageMbps = SpeedUtils.bitsToMbps(averageBits)
-                    averageSpeed(SpeedTestResult(averageMbps.toString()))
+                    averageSpeed(
+                        SpeedTestResult(false, averageMbps.toString(), null)
+                    )
                 } else {
-                    averageSpeed(SpeedTestResult("Error"))
+                    averageSpeed(
+                        SpeedTestResult(
+                            true,
+                            null,
+                            getErrorText(context, null)
+                        )
+                    )
                 }
             }
 
@@ -61,9 +96,15 @@ class SpeedTestServiceImpl : SpeedTestService {
                 if (report != null) {
                     allTests.add(report.transferRateBit)
                     val result = SpeedUtils.bitsToMbps(report.transferRateBit)
-                    instantSpeed(SpeedTestResult(result.toString()))
+                    instantSpeed(SpeedTestResult(false, result.toString(), null))
                 } else {
-                    instantSpeed(SpeedTestResult("Error"))
+                    instantSpeed(
+                        SpeedTestResult(
+                            true,
+                            null,
+                            "Error"
+                        )
+                    )
                 }
             }
         }

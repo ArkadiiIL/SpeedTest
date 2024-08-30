@@ -18,4 +18,11 @@
     <string name="btn_save_text">SAVE</string>
     <string name="et_server_url_upload_text">Enter Upload URL</string>
     <string name="tv_url_upload_label_text">Enter Upload URL</string>
+    <string name="invalidResponseError">Invalid Response</string>
+    <string name="socketError">Socket Error</string>
+    <string name="socketTimeoutError">Socket Timeout</string>
+    <string name="connectionError">Connection Error</string>
+    <string name="malformedUriError">Malformed Uri Error</string>
+    <string name="usupportedProtocolError">Unsupported Protocol Error\n</string>
+    <string name="unknownError">Unknown Error</string>
 </resources>

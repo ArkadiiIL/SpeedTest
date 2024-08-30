@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.speedtest.SpeedTestFragment">
+    tools:context=".presentation.speedtest.SpeedTestFragment">
 
     <LinearLayout
         android:id="@+id/instant_download_layout"

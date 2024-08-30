@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinKapt)
+    alias(libs.plugins.daggerGradlePlugin)
+
 }
 
 android {
@@ -48,9 +51,17 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    //coroutines
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.com.squareup.okhttp3)
+
+    //jspeedtest
     implementation(libs.fr.bmartel.jspeedtest)
+
+    //dagger
+    implementation(libs.com.google.dagger)
+    kapt(libs.com.google.dagger.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
