@@ -1,10 +1,13 @@
 package com.arkadii.myspeedtest.presentation.speedtest
 
 import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arkadii.myspeedtest.R
 import com.arkadii.myspeedtest.domain.service.SpeedTestService
 import com.arkadii.myspeedtest.util.SettingsUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +33,8 @@ class SpeedTestViewModel @Inject constructor(
     val blockStartButton: LiveData<Boolean> = _blockStartButton
     private val _clearFields = MutableLiveData<Unit>()
     val clearFields: LiveData<Unit> = _clearFields
+    private val _showError = MutableLiveData<String?>()
+    val showError = _showError
 
     @Volatile
     private var isDownloadComplete = true
@@ -49,15 +54,21 @@ class SpeedTestViewModel @Inject constructor(
                     speedTestService.startDownloadSpeedTest(
                         url = settings.downloadUrl,
                         instantSpeed = { result ->
-                            val speed = result.instantSpeedMbps
-                            if (speed != null) {
-                                _instantDownload.postValue(speed.toString())
+                            if (result.isError) {
+                                _showError.postValue(result.errorText)
+                            } else {
+                                _instantDownload.postValue(
+                                    formatResultText(result.instantSpeedMbps)
+                                )
                             }
                         },
                         averageSpeed = { result ->
-                            val speed = result.instantSpeedMbps
-                            if (speed != null) {
-                                _averageDownload.postValue(speed.toString())
+                            if (result.isError) {
+                                _showError.postValue(result.errorText)
+                            } else {
+                                _averageDownload.postValue(
+                                    formatResultText(result.instantSpeedMbps)
+                                )
                             }
                             isDownloadComplete = true
                             checkAllTestsComplete()
@@ -70,15 +81,21 @@ class SpeedTestViewModel @Inject constructor(
                     speedTestService.startUploadSpeedTest(
                         url = settings.uploadUrl,
                         instantSpeed = { result ->
-                            val speed = result.instantSpeedMbps
-                            if (speed != null) {
-                                _instantUpload.postValue(speed.toString())
+                            if (result.isError) {
+                                _showError.postValue(result.errorText)
+                            } else {
+                                _instantUpload.postValue(
+                                    formatResultText(result.instantSpeedMbps)
+                                )
                             }
                         },
                         averageSpeed = { result ->
-                            val speed = result.instantSpeedMbps
-                            if (speed != null) {
-                                _averageUpload.postValue(speed.toString())
+                            if (result.isError) {
+                                _showError.postValue(result.errorText)
+                            } else {
+                                _averageUpload.postValue(
+                                    formatResultText(result.instantSpeedMbps)
+                                )
                             }
                             isUploadComplete = true
                             checkAllTestsComplete()
@@ -98,5 +115,15 @@ class SpeedTestViewModel @Inject constructor(
         if (isDownloadComplete && isUploadComplete) {
             _blockStartButton.postValue(false)
         }
+    }
+
+    private fun formatResultText(result: String?): String {
+        return if (result != null) {
+            "$result $MBPS_POSTFIX"
+        } else "0 $MBPS_POSTFIX"
+    }
+
+    companion object {
+        private const val MBPS_POSTFIX = "Mb/s"
     }
 }

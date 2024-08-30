@@ -1,12 +1,15 @@
 package com.arkadii.myspeedtest.presentation.speedtest
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.arkadii.myspeedtest.R
 import com.arkadii.myspeedtest.databinding.FragmentSpeedTestBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,6 +59,9 @@ class SpeedTestFragment : Fragment() {
                     tvInstantUploadText.text = ""
                     tvUploadText.text = ""
                 }
+                showError.observe(viewLifecycleOwner) { errorText ->
+                    showErrorText(requireContext(), errorText)
+                }
             }
         }
     }
@@ -64,4 +70,9 @@ class SpeedTestFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
+
+private fun showErrorText(context: Context, errorText: String?) {
+    val text = errorText ?: context.getText(R.string.unknownError)
+    Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 }
