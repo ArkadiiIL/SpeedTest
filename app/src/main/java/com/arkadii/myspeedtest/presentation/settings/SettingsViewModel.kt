@@ -12,14 +12,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(private val application: Application) : ViewModel() {
-
+    //Лайв дата оповещает интерфейс об изменении настроек
     private val _settings = MutableLiveData<Settings>()
     val settings: LiveData<Settings> get() = _settings
 
+   //Инициализация viewModel загружает настройки и оповещает интерфейс
     init {
         loadSettings()
     }
 
+    //Обновляет текущие состояние настроек
     fun updateSettings(
         theme: Theme,
         downloadUrl: String = _settings.value?.downloadUrl.orEmpty(),
@@ -30,6 +32,7 @@ class SettingsViewModel @Inject constructor(private val application: Application
         _settings.value = Settings(theme, downloadUrl, uploadUrl, download, upload)
     }
 
+    //Сохраняет текущие настройки в SharedPreference используя утилитарный объект
     fun saveSettings() {
         _settings.value?.let { settings ->
             SettingsUtil.saveSettings(
@@ -43,6 +46,7 @@ class SettingsViewModel @Inject constructor(private val application: Application
         }
     }
 
+    //Загружает сохранненые настройки из SharedPreference с помощью утилитарного объекта и оповещает интерфейс
     private fun loadSettings() {
         _settings.value = SettingsUtil.loadSettings(application)
     }

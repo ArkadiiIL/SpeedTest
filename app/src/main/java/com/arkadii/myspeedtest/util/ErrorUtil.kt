@@ -5,6 +5,7 @@ import com.arkadii.myspeedtest.R
 import fr.bmartel.speedtest.model.SpeedTestError
 
 object ErrorUtil {
+    //Загружает текст из strings описывающий исключение
     fun getErrorText(context: Context, error: SpeedTestError?): String {
         return when(error) {
             SpeedTestError.INVALID_HTTP_RESPONSE -> context.getString(R.string.invalidResponseError)

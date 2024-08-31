@@ -14,6 +14,7 @@ import java.math.BigDecimal
 
 class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
 
+    //Метод запускает тест скорости скачивания
     override fun startDownloadSpeedTest(
         url: String,
         instantSpeed: (SpeedTestResult) -> Unit,
@@ -27,6 +28,7 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
         )
     }
 
+    //Метод запускает тест скорости загрузки
     override fun startUploadSpeedTest(
         url: String,
         instantSpeed: (SpeedTestResult) -> Unit,
@@ -40,13 +42,16 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
         )
     }
 
+    //Общий метод для запуска скорости, метод получает два метода которые будут информировать viewModel о полученных результатах
     private fun startSpeedTest(
         url: String,
         isDownload: Boolean,
         instantSpeed: (SpeedTestResult) -> Unit,
         averageSpeed: (SpeedTestResult) -> Unit
     ) {
+        //Создаем основной класс библиотеки jspeedtest
         val speedTestSocket = SpeedTestSocket()
+        //Добавляем слушатель событий, который будет отслеживать возникающие ошибки
         speedTestSocket.addSpeedTestListener(object : ISpeedTestListener {
             override fun onCompletion(report: SpeedTestReport?) {
             }
@@ -55,6 +60,7 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
             }
 
             override fun onError(speedTestError: SpeedTestError?, errorMessage: String?) {
+                //В случае возникновения ошибки получаем текст через утилиту и отправляем результат
                 instantSpeed(
                     SpeedTestResult(
                         true,
@@ -72,9 +78,14 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
             }
         })
 
+        //Создаем слушатель событий
         val repeatListener = object : IRepeatListener {
+            //Список всех результатов теста
             val allTests = mutableListOf<BigDecimal>()
+
+            //Этот метод вызывается при завершении тестирования
             override fun onCompletion(report: SpeedTestReport?) {
+                //Если отчет не является null, вычисляет среднию скорость и отправляет ее, иначе сообщает об ошибке
                 if (report != null) {
                     val averageBits = SpeedUtils.calculateAverageSpeed(allTests)
                     val averageMbps = SpeedUtils.bitsToMbps(averageBits)
@@ -92,6 +103,7 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
                 }
             }
 
+            //Этот метод периодически вызывается для отчета о текущей скорости и добавляем ее в список и отправляет для выовада на экран
             override fun onReport(report: SpeedTestReport?) {
                 if (report != null) {
                     allTests.add(report.transferRateBit)
@@ -110,6 +122,7 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
         }
 
         if (isDownload) {
+            //Запускает тест скачивания на определенный url в течении определенного времени(10 секунд) и отправляет отчет каждую(1 секунду)
             speedTestSocket.startDownloadRepeat(
                 url,
                 10000,
@@ -117,6 +130,7 @@ class SpeedTestServiceImpl(private val context: Context) : SpeedTestService {
                 repeatListener
             )
         } else {
+            //Запускает тест загрузки на определенный url в течении определенного времени(10 секунд) и отправляет отчет каждую(1 секунду), генерирует фаил размером в (1мб)
             speedTestSocket.startUploadRepeat(
                 url,
                 10000,

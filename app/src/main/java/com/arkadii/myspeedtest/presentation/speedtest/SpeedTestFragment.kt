@@ -15,10 +15,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SpeedTestFragment : Fragment() {
-
+    //Переменная для хранения binding объекта с помощью которого можно получить доступ к элементам интерфейса
     private var _binding: FragmentSpeedTestBinding? = null
-
+    //Безопасный дооступ гарантирующий, что binding не будeт null
     private val binding get() = _binding!!
+    //Получение viewModel с помощью Hilt
     private val viewModel: SpeedTestViewModel by viewModels()
 
     override fun onCreateView(
@@ -34,6 +35,7 @@ class SpeedTestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Устанавливаем слушатели на элементы интерфейса, а так же обрабатываем события полученные из viewModel
         binding.apply {
             viewModel.apply {
                 btnStart.setOnClickListener { start() }
@@ -53,12 +55,14 @@ class SpeedTestFragment : Fragment() {
                 blockStartButton.observe(viewLifecycleOwner) { isBlocked ->
                     btnStart.isEnabled = !isBlocked
                 }
+                //Очищаем поля от информации
                 clearFields.observe(viewLifecycleOwner) {
                     tvInstantDownloadText.text = ""
                     tvDownloadText.text = ""
                     tvInstantUploadText.text = ""
                     tvUploadText.text = ""
                 }
+                //Показываем сообщение об ошибке
                 showError.observe(viewLifecycleOwner) { errorText ->
                     showErrorText(requireContext(), errorText)
                 }
@@ -72,6 +76,7 @@ class SpeedTestFragment : Fragment() {
     }
 }
 
+//Отражаем сообщение об ошибку с помощью Toast
 private fun showErrorText(context: Context, errorText: String?) {
     val text = errorText ?: context.getText(R.string.unknownError)
     Toast.makeText(context, text, Toast.LENGTH_LONG).show()
