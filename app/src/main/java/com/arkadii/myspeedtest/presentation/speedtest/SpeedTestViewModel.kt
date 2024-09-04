@@ -42,13 +42,18 @@ class SpeedTestViewModel @Inject constructor(
     @Volatile
     private var isUploadComplete = true
 
-    //Метод запускающий тесто скорости
+    @Volatile
+    var isButtonClicked = false
+        private set
+
+    //Метод запускающий тест скорости
     fun start() {
         //Загружаем текущие настройки
         val settings = SettingsUtil.loadSettings(application)
         //Блокируем кнопку старта
         _blockStartButton.value = true
         //Очищаем поля
+        isButtonClicked = true
         _clearFields.value = Unit
 
         //Запускаем выполнение в отдельном потоке
@@ -120,16 +125,18 @@ class SpeedTestViewModel @Inject constructor(
 
                 //Если оба теста не включены, отменяем тест, разблокируем кнопку и очищаем поля
                 if (!settings.download && !settings.upload) {
-                    _blockStartButton.postValue(false)
+                    isButtonClicked = false
                     _clearFields.postValue(Unit)
+                    _blockStartButton.postValue(false)
                 }
             }
         }
     }
 
-    //Метод проверяем завершены ли оба тесты и в этом случае разблокирует кнопку старта для нового теста
+    //Метод проверяем завершены ли оба теста и в этом случае разблокирует кнопку старта для нового теста
     private fun checkAllTestsComplete() {
         if (isDownloadComplete && isUploadComplete) {
+            isButtonClicked = false
             _blockStartButton.postValue(false)
         }
     }
