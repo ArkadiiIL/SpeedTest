@@ -35,16 +35,6 @@ class SpeedTestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Устанавливаем сохранненнвые значения текстовых полей
-        savedInstanceState?.let {
-            binding.apply {
-                tvInstantDownloadText.text = it.getString(KEY_INSTANT_DOWNLOAD_TEXT)
-                tvDownloadText.text = it.getString(KEY_AVERAGE_DOWNLOAD_TEXT)
-                tvInstantUploadText.text = it.getString(KEY_INSTANT_UPLOAD_TEXT)
-                tvUploadText.text = it.getString(KEY_AVERAGE_UPLOAD_TEXT)
-            }
-        }
-
         //Устанавливаем слушатели на элементы интерфейса, а так же обрабатываем события полученные из viewModel
         binding.apply {
             viewModel.apply {
@@ -65,32 +55,10 @@ class SpeedTestFragment : Fragment() {
                 blockStartButton.observe(viewLifecycleOwner) { isBlocked ->
                     btnStart.isEnabled = !isBlocked
                 }
-                //Очищаем поля от информации
-                clearFields.observe(viewLifecycleOwner) {
-                    if (isButtonClicked) {
-                        tvInstantDownloadText.text = ""
-                        tvDownloadText.text = ""
-                        tvInstantUploadText.text = ""
-                        tvUploadText.text = ""
-                    }
-                }
                 //Показываем сообщение об ошибке
                 showError.observe(viewLifecycleOwner) { errorText ->
                     showErrorText(requireContext(), errorText)
                 }
-            }
-        }
-    }
-
-    //Сохраняем сосстояние текстовых полей
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.apply {
-            binding.apply {
-                putString(KEY_INSTANT_DOWNLOAD_TEXT, tvInstantDownloadText.text.toString())
-                putString(KEY_AVERAGE_DOWNLOAD_TEXT, tvDownloadText.text.toString())
-                putString(KEY_INSTANT_UPLOAD_TEXT, tvInstantUploadText.text.toString())
-                putString(KEY_AVERAGE_UPLOAD_TEXT, tvUploadText.text.toString())
             }
         }
     }
@@ -104,13 +72,6 @@ class SpeedTestFragment : Fragment() {
     private fun showErrorText(context: Context, errorText: String?) {
         val text = errorText ?: context.getText(R.string.unknownError)
         Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private const val KEY_INSTANT_DOWNLOAD_TEXT = "instantDownloadText"
-        private const val KEY_AVERAGE_DOWNLOAD_TEXT = "averageDownloadText"
-        private const val KEY_INSTANT_UPLOAD_TEXT = "instantUploadText"
-        private const val KEY_AVERAGE_UPLOAD_TEXT = "averageUploadText"
     }
 }
 

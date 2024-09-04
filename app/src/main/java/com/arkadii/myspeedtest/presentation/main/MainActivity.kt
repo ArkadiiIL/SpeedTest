@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_speed_test, R.id.navigation_settings
             )
         )
+
         //Настройка ActionBar чтобы синхранизировать заголовко и стрелку назад.
         setupActionBarWithNavController(navController, appBarConfiguration)
         //Настройка BottomNavigationView чтобы менять фрагменты.

@@ -14,8 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class SettingsFragment : Fragment() {
     //Переменная для хранения binding объекта с помощью которого можно получить доступ к элементам интерфейса
     private var _binding: FragmentSettingsBinding? = null
+
     //Безопасный дооступ гарантирующий, что binding не будте null
     private val binding get() = _binding!!
+
     //Получение viewModel с помощью Hilt
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -87,9 +89,7 @@ class SettingsFragment : Fragment() {
 
     //Перезапускаем текущую активити для применения настроек
     private fun restartActivity() {
-        val intent = requireActivity().intent
-        requireActivity().finish()
-        startActivity(intent)
+        requireActivity().recreate()
     }
 
     override fun onDestroyView() {

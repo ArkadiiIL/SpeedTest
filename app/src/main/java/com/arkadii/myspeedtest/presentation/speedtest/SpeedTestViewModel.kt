@@ -30,8 +30,6 @@ class SpeedTestViewModel @Inject constructor(
     val averageUpload = _averageUpload
     private val _blockStartButton = MutableLiveData<Boolean>()
     val blockStartButton: LiveData<Boolean> = _blockStartButton
-    private val _clearFields = MutableLiveData<Unit>()
-    val clearFields: LiveData<Unit> = _clearFields
     private val _showError = MutableLiveData<String?>()
     val showError = _showError
 
@@ -42,10 +40,6 @@ class SpeedTestViewModel @Inject constructor(
     @Volatile
     private var isUploadComplete = true
 
-    @Volatile
-    var isButtonClicked = false
-        private set
-
     //Метод запускающий тест скорости
     fun start() {
         //Загружаем текущие настройки
@@ -53,8 +47,7 @@ class SpeedTestViewModel @Inject constructor(
         //Блокируем кнопку старта
         _blockStartButton.value = true
         //Очищаем поля
-        isButtonClicked = true
-        _clearFields.value = Unit
+        clearFields()
 
         //Запускаем выполнение в отдельном потоке
         viewModelScope.launch {
@@ -125,8 +118,7 @@ class SpeedTestViewModel @Inject constructor(
 
                 //Если оба теста не включены, отменяем тест, разблокируем кнопку и очищаем поля
                 if (!settings.download && !settings.upload) {
-                    isButtonClicked = false
-                    _clearFields.postValue(Unit)
+                    clearFields()
                     _blockStartButton.postValue(false)
                 }
             }
@@ -136,7 +128,6 @@ class SpeedTestViewModel @Inject constructor(
     //Метод проверяем завершены ли оба теста и в этом случае разблокирует кнопку старта для нового теста
     private fun checkAllTestsComplete() {
         if (isDownloadComplete && isUploadComplete) {
-            isButtonClicked = false
             _blockStartButton.postValue(false)
         }
     }
@@ -146,6 +137,14 @@ class SpeedTestViewModel @Inject constructor(
         return if (result != null) {
             "$result $MBPS_POSTFIX"
         } else "0 $MBPS_POSTFIX"
+    }
+
+    //Очищаем поля
+    private fun clearFields() {
+        _instantDownload.postValue("")
+        _averageDownload.postValue("")
+        _instantUpload.postValue("")
+        _averageUpload.postValue("")
     }
 
     companion object {
